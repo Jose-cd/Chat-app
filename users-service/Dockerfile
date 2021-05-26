@@ -4,6 +4,6 @@ COPY . /opt/usr/app
 
 WORKDIR /opt/usr/app
 
-RUN yarn
+RUN yarn install
 
-CMD yarn watch
+CMD ["yarn", "watch"]
