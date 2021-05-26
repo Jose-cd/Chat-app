@@ -13,7 +13,7 @@
 
   $i++;
   $cfg['Servers'][$i]['verbose'] = 'users-service';
-  $cfg['Servers'][$i]['host'] = 'chat-service-db';
+  $cfg['Servers'][$i]['host'] = 'users-service-db';
   $cfg['Servers'][$i]['port'] = '';
   $cfg['Servers'][$i]['socket'] = '';
   $cfg['Servers'][$i]['connect_type'] = 'tcp';

@@ -28,7 +28,8 @@ export class Users1621999196860 implements MigrationInterface {
             type: "timestamp",
           },
         ],
-      })
+      }),
+      true
     );
 
     await queryRunner.createIndex(
