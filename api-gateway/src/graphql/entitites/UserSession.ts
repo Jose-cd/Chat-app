@@ -9,8 +9,8 @@ export class UserSession {
   userId: string;
 
   @Field()
-  createdAt: Date;
+  createdAt: string;
 
   @Field()
-  expiresAt: Date;
+  expiresAt: string;
 }
