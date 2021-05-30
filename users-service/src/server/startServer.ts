@@ -2,8 +2,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import accessEnv from "#root/helpers/accessEnv";
-import setupRoutes from "./routes";
-
+import routes from "./routes";
 const PORT = parseInt(accessEnv("PORT", "7101"), 10);
 
 const startServer = async () => {
@@ -18,7 +17,7 @@ const startServer = async () => {
     })
   );
 
-  setupRoutes(app);
+  app.use("/", routes);
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     return res.status(500).json({ message: err.message });

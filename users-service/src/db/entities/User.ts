@@ -17,5 +17,5 @@ export default class User {
   passwordHash: string;
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt?: string;
 }
