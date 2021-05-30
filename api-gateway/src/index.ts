@@ -1,1 +1,4 @@
-console.log("api gateway")
+import "reflect-metadata";
+import startServer from "./server/startServer";
+
+startServer();
