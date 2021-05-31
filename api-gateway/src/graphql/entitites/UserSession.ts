@@ -1,16 +1,20 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import { User } from "./User";
 
 @ObjectType()
 export class UserSession {
-  @Field((type) => ID)
+  @Field((type) => ID, { nullable: true })
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   userId: string;
 
-  @Field()
+  @Field({ nullable: true })
   createdAt: string;
 
-  @Field()
+  @Field({ nullable: true })
   expiresAt: string;
+
+  @Field({ nullable: true })
+  user?: User;
 }

@@ -12,8 +12,11 @@ const injectSession = async (
     });
 
     res.locals.userSession = userSession;
+
     return next();
   }
+
+  return next();
 };
 
 export default injectSession;
