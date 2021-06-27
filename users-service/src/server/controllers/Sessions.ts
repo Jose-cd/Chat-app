@@ -71,7 +71,7 @@ export const sessionsController: ISessionsController = {
 
       await userSessionRepository.remove(userSession);
 
-      return res.end();
+      return res.json(true);
     } catch (err) {
       return next(err);
     }

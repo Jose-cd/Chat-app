@@ -24,4 +24,22 @@ export default class UsersService {
 
     return body;
   }
+
+  static async login(username: string, password: string): Promise<User> {
+    const body: User = await got
+      .post(`${USERS_SERVICE_URI}/sessions/`, {
+        json: {
+          username,
+          password,
+        },
+      })
+      .json();
+
+    return body;
+  }
+
+  static async logout(id:string){
+    const body = await got.delete(`${USERS_SERVICE_URI}/sessions/${id}`).json()
+    return body;
+  }
 }
