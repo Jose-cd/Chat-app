@@ -34,7 +34,16 @@ export class UserSessionsResolver {
   }
 
   @Query((returns) => UserSession)
-  async getSession(@Ctx() { req, res }: ResolverContext) {
+  async getSession(
+    @Ctx() { req, res }: ResolverContext,
+    @Arg("id") id: string
+  ) {
+    const userSessionData = await UsersService.fetchUserSession({
+      sessionId: id,
+    });
+
+    res.locals.userSession = userSessionData;
+
     if (!res.locals.userSession) {
       return {
         id: null,
@@ -48,13 +57,17 @@ export class UserSessionsResolver {
     return res.locals.userSession;
   }
 
-  @Mutation((returns) => UserSession)
+  @Mutation((returns) => UserSession, {
+    description: "Login using a username and password",
+  })
   async login(@Arg("LoginData") { username, password }: LoginInput) {
     const response = UsersService.login(username, password);
     return response;
   }
 
-  @Mutation((returns) => Boolean)
+  @Mutation((returns) => Boolean, {
+    description: "log out of the current session",
+  })
   async logout(@Arg("id") id: string) {
     const response = await UsersService.logout(id);
     console.log(response);
