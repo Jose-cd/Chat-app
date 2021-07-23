@@ -6,6 +6,8 @@ import { schema } from "#root/graphql";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import injectSession from "#root/server/middleware/injectSession";
+import http from "http";
+
 const PORT = parseInt(process.env.PORT as string, 10);
 
 const startserver = async () => {
@@ -14,8 +16,13 @@ const startserver = async () => {
     formatError: formatGraphQLErrors,
     schema: await schema(),
   });
-
   const app = express();
+
+  const httpServer = http.createServer(app);
+
+  //* apply the http server to apollo for websocket connection
+  apolloServer.applyMiddleware({ app });
+  apolloServer.installSubscriptionHandlers(httpServer);
 
   app.use(cookieParser());
 
@@ -31,7 +38,7 @@ const startserver = async () => {
 
   apolloServer.applyMiddleware({ app, cors: false, path: "/graphql" });
 
-  app.listen(PORT, "0.0.0.0", () => {
+  httpServer.listen(PORT, "0.0.0.0", () => {
     console.info(`API gateway running on port ${PORT}`);
   });
 };
