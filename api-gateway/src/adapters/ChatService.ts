@@ -8,4 +8,17 @@ export class ChatService {
 
     return body;
   }
+
+  static async postMsg({ msg, user }: { user: string; msg: string }) {
+    const body: Message = await got
+      .post(`${CHAT_SERVICE_URI}/message`, {
+        json: {
+          msg,
+          user,
+        },
+      })
+      .json();
+
+    return body;
+  }
 }
