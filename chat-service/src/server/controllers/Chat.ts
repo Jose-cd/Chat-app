@@ -22,13 +22,25 @@ const ChatController: IChatController = {
     }
   },
 
-  getMsgs: async (_, res, next) => {
+  getMsgList: async (_, res, next) => {
     const chatRepository = getRepository(Chat);
     try {
       const result = await chatRepository.find();
       return res.json(result);
     } catch (error) {
       return next(new Error("Error retrieving messages"));
+    }
+  },
+
+  deleteMsg: async (req, res, next) => {
+    const { id } = req.params;
+    const chatRepository = getRepository(Chat);
+
+    try {
+      const response = await chatRepository.delete({ id });
+      return res.json(response);
+    } catch (error) {
+      return next(new Error("Can't delete this message."));
     }
   },
 };

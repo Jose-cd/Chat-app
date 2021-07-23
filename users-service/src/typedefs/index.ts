@@ -7,15 +7,9 @@ type controllerType = (
 ) => Promise<void | any> | any;
 
 export interface IUsersController {
-  getUser: controllerType;
-
-  createUser: controllerType;
+  [k: string]: controllerType;
 }
 
 export interface ISessionsController {
-  createSession: controllerType;
-
-  deleteSession: controllerType;
-
-  getSession: controllerType;
+  [k: string]: controllerType;
 }

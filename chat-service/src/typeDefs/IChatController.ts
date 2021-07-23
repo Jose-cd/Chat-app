@@ -7,6 +7,5 @@ type controllerType = (
 ) => Promise<void | any> | any;
 
 export interface IChatController {
-  postMsg: controllerType;
-  getMsgs: controllerType;
+  [k: string]: controllerType;
 }
