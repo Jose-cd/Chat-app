@@ -21,6 +21,16 @@ const ChatController: IChatController = {
       return next(new Error("Error."));
     }
   },
+
+  getMsgs: async (_, res, next) => {
+    const chatRepository = getRepository(Chat);
+    try {
+      const result = await chatRepository.find();
+      return res.json(result);
+    } catch (error) {
+      return next(new Error("Error retrieving messages"));
+    }
+  },
 };
 
 export default ChatController;
