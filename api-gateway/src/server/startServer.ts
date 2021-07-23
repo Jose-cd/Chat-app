@@ -41,6 +41,8 @@ const startserver = async () => {
   httpServer.listen(PORT, "0.0.0.0", () => {
     console.info(`API gateway running on port ${PORT}`);
   });
+
+  return apolloServer;
 };
 
 export default startserver;
