@@ -33,15 +33,19 @@ export class UserSessionsResolver {
     return user;
   }
 
-  @Query((returns) => UserSession)
+  @Query((returns) => UserSession, {
+    description: "Gets current user session & information",
+  })
   async getSession(
     @Ctx() { req, res }: ResolverContext,
     @Arg("id") id: string
   ) {
+    //* Get Current session data
     const userSessionData = await UsersService.fetchUserSession({
       sessionId: id,
     });
 
+    //* Save in the locals
     res.locals.userSession = userSessionData;
 
     if (!res.locals.userSession) {
@@ -54,6 +58,10 @@ export class UserSessionsResolver {
       };
     }
 
+    /**
+     * At this point the field resolver for user will do his job
+     * Returns the User Session full information
+     */
     return res.locals.userSession;
   }
 
