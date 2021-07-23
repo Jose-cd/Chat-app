@@ -8,4 +8,5 @@ type controllerType = (
 
 export interface IChatController {
   postMsg: controllerType;
+  getMsgs: controllerType;
 }

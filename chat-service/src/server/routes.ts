@@ -1,9 +1,8 @@
 import express from "express";
+import ChatController from "./controllers/Chat";
 
 const routes = express.Router();
 
-routes.get("/", (req, res) => {
-  res.status(200).json("hello world!");
-});
+routes.post("/message", ChatController.postMsg);
 
 export default routes;
