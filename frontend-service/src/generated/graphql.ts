@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -100,16 +100,31 @@ export type GetMessagesQuery = (
   { __typename?: 'Query' }
   & { getMessages: Array<(
     { __typename?: 'Message' }
-    & Pick<Message, 'username' | 'message'>
+    & Pick<Message, 'id' | 'username' | 'message' | 'createdAt'>
   )> }
+);
+
+export type PostMsgMutationVariables = Exact<{
+  msg: MessageInput;
+}>;
+
+
+export type PostMsgMutation = (
+  { __typename?: 'Mutation' }
+  & { postMessage: (
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'username' | 'message' | 'createdAt'>
+  ) }
 );
 
 
 export const GetMessagesDocument = `
     query getMessages {
   getMessages {
+    id
     username
     message
+    createdAt
   }
 }
     `;
@@ -124,5 +139,26 @@ export const useGetMessagesQuery = <
     useQuery<GetMessagesQuery, TError, TData>(
       ['getMessages', variables],
       fetcher<GetMessagesQuery, GetMessagesQueryVariables>(client, GetMessagesDocument, variables),
+      options
+    );
+export const PostMsgDocument = `
+    mutation postMsg($msg: MessageInput!) {
+  postMessage(MessageInput: $msg) {
+    id
+    username
+    message
+    createdAt
+  }
+}
+    `;
+export const usePostMsgMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient, 
+      options?: UseMutationOptions<PostMsgMutation, TError, PostMsgMutationVariables, TContext>
+    ) => 
+    useMutation<PostMsgMutation, TError, PostMsgMutationVariables, TContext>(
+      (variables?: PostMsgMutationVariables) => fetcher<PostMsgMutation, PostMsgMutationVariables>(client, PostMsgDocument, variables)(),
       options
     );

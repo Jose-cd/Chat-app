@@ -1,6 +1,8 @@
 query getMessages {
   getMessages {
+    id
     username
     message
+    createdAt
   }
 }

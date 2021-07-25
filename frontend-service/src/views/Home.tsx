@@ -1,11 +1,22 @@
 import React from 'react'
-import graphqlRequestClient from '../clients/graphqlRequestClient'
-import { useGetMessagesQuery } from '../generated/graphql'
+import { AddMsg } from '../components/AddMsg'
+import { MsgList } from '../components/MsgList'
 interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = () => {
-  const { data } = useGetMessagesQuery(graphqlRequestClient)
+  return (
+    <div style={{ display: 'flex' }}>
+      <div
+        style={{ width: '300px', height: '600px', overflow: 'auto' }}
+        className="messages"
+      >
+        Messages
+        <MsgList />
+      </div>
 
-  console.log(data?.getMessages)
-  return <div>Hello from home</div>
+      <div className="postMsg">
+        <AddMsg />
+      </div>
+    </div>
+  )
 }
