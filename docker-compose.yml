@@ -1,6 +1,16 @@
 version: "3"
 
 services:
+  frontend-service:
+    build:
+      context: "."
+      dockerfile: "./frontend-service/Dockerfile.dev"
+    depends_on:
+      - api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-service:/opt/usr/app
   api-gateway:
     build:
       context: "."

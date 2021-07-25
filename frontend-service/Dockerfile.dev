@@ -1,0 +1,7 @@
+FROM node:12-alpine
+
+WORKDIR /opt/usr/app
+
+COPY . .
+
+CMD ["npm", "start"]
