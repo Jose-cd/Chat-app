@@ -5,12 +5,15 @@ services:
     build:
       context: "."
       dockerfile: "./frontend-service/Dockerfile.dev"
+    environment:
+      - REACT_APP_GRAPHQL_ENDPOINT=http://localhost:7000/graphql
     depends_on:
       - api-gateway
     ports:
       - "3000:3000"
     volumes:
       - ./frontend-service:/opt/usr/app
+
   api-gateway:
     build:
       context: "."
