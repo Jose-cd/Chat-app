@@ -1,13 +1,10 @@
-import { GraphQLClient } from 'graphql-request';
-import { useQuery, UseQueryOptions, useMutation, UseMutationOptions } from 'react-query';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-
-function fetcher<TData, TVariables>(client: GraphQLClient, query: string, variables?: TVariables) {
-  return async (): Promise<TData> => client.request<TData, TVariables>(query, variables);
-}
+const defaultOptions =  {}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -118,7 +115,7 @@ export type PostMsgMutation = (
 );
 
 
-export const GetMessagesDocument = `
+export const GetMessagesDocument = gql`
     query getMessages {
   getMessages {
     id
@@ -128,20 +125,34 @@ export const GetMessagesDocument = `
   }
 }
     `;
-export const useGetMessagesQuery = <
-      TData = GetMessagesQuery,
-      TError = unknown
-    >(
-      client: GraphQLClient, 
-      variables?: GetMessagesQueryVariables, 
-      options?: UseQueryOptions<GetMessagesQuery, TError, TData>
-    ) => 
-    useQuery<GetMessagesQuery, TError, TData>(
-      ['getMessages', variables],
-      fetcher<GetMessagesQuery, GetMessagesQueryVariables>(client, GetMessagesDocument, variables),
-      options
-    );
-export const PostMsgDocument = `
+
+/**
+ * __useGetMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMessagesQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, options);
+      }
+export function useGetMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesQuery, GetMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessagesQuery, GetMessagesQueryVariables>(GetMessagesDocument, options);
+        }
+export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
+export type GetMessagesLazyQueryHookResult = ReturnType<typeof useGetMessagesLazyQuery>;
+export type GetMessagesQueryResult = Apollo.QueryResult<GetMessagesQuery, GetMessagesQueryVariables>;
+export const PostMsgDocument = gql`
     mutation postMsg($msg: MessageInput!) {
   postMessage(MessageInput: $msg) {
     id
@@ -151,14 +162,29 @@ export const PostMsgDocument = `
   }
 }
     `;
-export const usePostMsgMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(
-      client: GraphQLClient, 
-      options?: UseMutationOptions<PostMsgMutation, TError, PostMsgMutationVariables, TContext>
-    ) => 
-    useMutation<PostMsgMutation, TError, PostMsgMutationVariables, TContext>(
-      (variables?: PostMsgMutationVariables) => fetcher<PostMsgMutation, PostMsgMutationVariables>(client, PostMsgDocument, variables)(),
-      options
-    );
+export type PostMsgMutationFn = Apollo.MutationFunction<PostMsgMutation, PostMsgMutationVariables>;
+
+/**
+ * __usePostMsgMutation__
+ *
+ * To run a mutation, you first call `usePostMsgMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostMsgMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postMsgMutation, { data, loading, error }] = usePostMsgMutation({
+ *   variables: {
+ *      msg: // value for 'msg'
+ *   },
+ * });
+ */
+export function usePostMsgMutation(baseOptions?: Apollo.MutationHookOptions<PostMsgMutation, PostMsgMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PostMsgMutation, PostMsgMutationVariables>(PostMsgDocument, options);
+      }
+export type PostMsgMutationHookResult = ReturnType<typeof usePostMsgMutation>;
+export type PostMsgMutationResult = Apollo.MutationResult<PostMsgMutation>;
+export type PostMsgMutationOptions = Apollo.BaseMutationOptions<PostMsgMutation, PostMsgMutationVariables>;

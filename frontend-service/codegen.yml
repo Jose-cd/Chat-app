@@ -6,7 +6,6 @@ generates:
     plugins:
       - 'typescript'
       - 'typescript-operations'
-      - 'typescript-react-query'
+      - typescript-react-apollo
     config:
-      fetcher: graphql-request
       endpoint: 'http://localhost:7000/graphql'

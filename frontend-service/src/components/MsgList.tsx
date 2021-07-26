@@ -1,11 +1,10 @@
 import React from 'react'
-import graphqlRequestClient from '../clients/graphqlRequestClient'
 import { useGetMessagesQuery } from '../generated/graphql'
 
 interface MsgListProps {}
 
 export const MsgList: React.FC<MsgListProps> = () => {
-  const { data } = useGetMessagesQuery(graphqlRequestClient)
+  const { data } = useGetMessagesQuery()
   return (
     <ul>
       {data?.getMessages.map(({ username, message, id }) => (
