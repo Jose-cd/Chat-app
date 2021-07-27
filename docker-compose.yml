@@ -2,9 +2,10 @@ version: "3"
 
 services:
   frontend-service:
+    mem_limit: 1500mb
     build:
-      context: "."
-      dockerfile: "./frontend-service/Dockerfile.dev"
+      context: "./frontend-service"
+      dockerfile: "Dockerfile.dev"
     environment:
       - REACT_APP_GRAPHQL_ENDPOINT=http://localhost:7000/graphql
     depends_on:
@@ -13,8 +14,10 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend-service:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   api-gateway:
+    mem_limit: 300m
     build:
       context: "."
       dockerfile: "./api-gateway/Dockerfile"
@@ -27,6 +30,7 @@ services:
       - ./api-gateway:/opt/usr/app
 
   chat-service:
+    mem_limit: 300m
     build:
       context: "."
       dockerfile: "./chat-service/Dockerfile"
@@ -38,6 +42,7 @@ services:
       - ./chat-service:/opt/usr/app
 
   chat-service-db:
+    mem_limit: 300m
     container_name: chat-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password
@@ -47,6 +52,7 @@ services:
       - "7200:3600"
 
   phpmyadmin:
+    mem_limit: 120m
     image: phpmyadmin/phpmyadmin
     ports:
       - "7300:80"
@@ -54,6 +60,7 @@ services:
       - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
 
   users-service:
+    mem_limit: 300m
     build:
       context: "."
       dockerfile: "./users-service/Dockerfile"
@@ -65,6 +72,7 @@ services:
       - ./users-service:/opt/usr/app
 
   users-service-db:
+    mem_limit: 300m
     container_name: users-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password

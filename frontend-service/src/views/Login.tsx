@@ -10,6 +10,7 @@ import {
   TextField,
   Button,
   Box,
+  CircularProgress,
 } from '@material-ui/core'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 interface LoginProps {}
@@ -45,16 +46,18 @@ export const Login: React.FC<LoginProps> = () => {
     username: '',
   })
 
-  console.log(data, loading, error)
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    await login({
-      variables: {
-        data: loginData,
-      },
-    })
+    try {
+      await login({
+        variables: {
+          data: loginData,
+        },
+      })
+    } catch {
+      console.log(error?.message)
+    }
 
     if (!error && data) {
       localStorage.setItem('sessionId', data.login.id as string)
@@ -82,6 +85,7 @@ export const Login: React.FC<LoginProps> = () => {
           </Grid>
 
           <h2 className={classes.textCenter}>Sign In</h2>
+          {/* <Alert severity="error">{error?.message}</Alert> */}
           <form onSubmit={onSubmit}>
             <TextField
               onChange={onChange}
@@ -103,11 +107,17 @@ export const Login: React.FC<LoginProps> = () => {
             />
             <Box my={3}>
               <Button
+                disabled={loading}
                 type="submit"
                 color="primary"
                 variant="contained"
                 fullWidth
               >
+                {loading && (
+                  <Box mr={1}>
+                    <CircularProgress style={{ maxWidth: '12px'}} />
+                  </Box>
+                )}
                 Log in
               </Button>
             </Box>
