@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { LoginInput, useLoginMutation } from '../generated/graphql'
+import { Alert } from '@material-ui/lab'
 import {
   Grid,
   Paper,
@@ -10,9 +11,9 @@ import {
   TextField,
   Button,
   Box,
-  CircularProgress,
 } from '@material-ui/core'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import { useHistory } from 'react-router-dom'
 interface LoginProps {}
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 export const Login: React.FC<LoginProps> = () => {
+  const history = useHistory()
   const classes = useStyles()
   const [login, { data, loading, error }] = useLoginMutation()
   const [loginData, setLoginData] = useState<LoginInput>({
@@ -55,8 +57,10 @@ export const Login: React.FC<LoginProps> = () => {
           data: loginData,
         },
       })
+
+      history.push('/')
     } catch {
-      console.log(error?.message)
+      // console.log(error?.message)
     }
 
     if (!error && data) {
@@ -85,7 +89,12 @@ export const Login: React.FC<LoginProps> = () => {
           </Grid>
 
           <h2 className={classes.textCenter}>Sign In</h2>
-          {/* <Alert severity="error">{error?.message}</Alert> */}
+          {error && (
+            <Box mb={2}>
+              <Alert severity="error">{error?.message}</Alert>
+            </Box>
+          )}
+
           <form onSubmit={onSubmit}>
             <TextField
               onChange={onChange}
@@ -113,11 +122,6 @@ export const Login: React.FC<LoginProps> = () => {
                 variant="contained"
                 fullWidth
               >
-                {loading && (
-                  <Box mr={1}>
-                    <CircularProgress style={{ maxWidth: '12px'}} />
-                  </Box>
-                )}
                 Log in
               </Button>
             </Box>
