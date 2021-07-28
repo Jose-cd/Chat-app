@@ -57,17 +57,18 @@ export const Login: React.FC<LoginProps> = () => {
           data: loginData,
         },
       })
-
-      localStorage.setItem('sessionId', data!.login.id as string)
-
-      history.push('/')
     } catch {
-      // console.log(error?.message)
+      console.log(error?.message)
     }
   }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData((data) => ({ ...data, [e.target.id]: e.target.value }))
+  }
+
+  if (data?.login.id) {
+    localStorage.setItem('sessionId', data.login.id as string)
+    history.push('/')
   }
 
   return (

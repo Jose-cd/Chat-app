@@ -16,7 +16,7 @@ export const Register: React.FC<RegisterProps> = () => {
   const history = useHistory()
   const classes = useLoginFormStyles()
 
-  const [mutate, { data, loading, error }] = useRegisterMutation()
+  const [mutate, { loading, error }] = useRegisterMutation()
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRegisterData((data) => ({ ...data, [e.target.id]: e.target.value }))

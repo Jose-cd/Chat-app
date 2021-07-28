@@ -1,9 +1,12 @@
 FROM node:12-alpine
 
-COPY . /opt/usr/app
-
 WORKDIR /opt/usr/app
 
-RUN yarn install
+# install app dependencies
+COPY package.json ./
+RUN yarn install 
+
+# add app
+COPY . ./
 
 CMD ["yarn", "watch"]
