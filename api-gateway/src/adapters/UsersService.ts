@@ -38,8 +38,21 @@ export default class UsersService {
     return body;
   }
 
-  static async logout(id:string){
-    const body = await got.delete(`${USERS_SERVICE_URI}/sessions/${id}`).json()
+  static async logout(id: string) {
+    const body = await got.delete(`${USERS_SERVICE_URI}/sessions/${id}`).json();
+    return body;
+  }
+
+  static async register(username: string, password: string) {
+    const body: User = await got
+      .post(`${USERS_SERVICE_URI}/users/`, {
+        json: {
+          username,
+          password,
+        },
+      })
+      .json();
+
     return body;
   }
 }

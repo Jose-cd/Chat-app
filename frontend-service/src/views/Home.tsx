@@ -1,9 +1,10 @@
-import React from 'react'
 import { AddMsg } from '../components/AddMsg'
 import { MsgList } from '../components/MsgList'
+import { WithAuth, withAuth } from '../shared/hocs/withAuth'
 interface HomeProps {}
 
-export const Home: React.FC<HomeProps> = () => {
+const Home = ({ user }: WithAuth<HomeProps>) => {
+  console.log(user)
   return (
     <div style={{ display: 'flex' }}>
       <div
@@ -20,3 +21,5 @@ export const Home: React.FC<HomeProps> = () => {
     </div>
   )
 }
+
+export default withAuth(Home)

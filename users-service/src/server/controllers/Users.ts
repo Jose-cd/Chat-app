@@ -39,6 +39,9 @@ export const userController: IUsersController = {
 
       return res.json(omit(createdUser, ["passwordHash"]));
     } catch (err) {
+      if (err.errno === 1062) {
+        return next(new Error("This username already exists."));
+      }
       return next(err);
     }
   },

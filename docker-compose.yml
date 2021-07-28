@@ -17,7 +17,7 @@ services:
       - /opt/usr/app/node_modules
 
   api-gateway:
-    mem_limit: 300m
+    mem_limit: 500m
     build:
       context: "."
       dockerfile: "./api-gateway/Dockerfile"
@@ -28,9 +28,10 @@ services:
       - "7000:7000"
     volumes:
       - ./api-gateway:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   chat-service:
-    mem_limit: 300m
+    mem_limit: 500m
     build:
       context: "."
       dockerfile: "./chat-service/Dockerfile"
@@ -40,9 +41,10 @@ services:
       - "7100:7100"
     volumes:
       - ./chat-service:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   chat-service-db:
-    mem_limit: 300m
+    mem_limit: 500m
     container_name: chat-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password
@@ -60,7 +62,7 @@ services:
       - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
 
   users-service:
-    mem_limit: 300m
+    mem_limit: 500m
     build:
       context: "."
       dockerfile: "./users-service/Dockerfile"
@@ -70,9 +72,10 @@ services:
       - "7101:7101"
     volumes:
       - ./users-service:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   users-service-db:
-    mem_limit: 300m
+    mem_limit: 500m
     container_name: users-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password

@@ -13,10 +13,10 @@ import {
   Box,
 } from '@material-ui/core'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 interface LoginProps {}
 
-const useStyles = makeStyles((theme: Theme) =>
+export const useLoginFormStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 export const Login: React.FC<LoginProps> = () => {
   const history = useHistory()
-  const classes = useStyles()
+  const classes = useLoginFormStyles()
   const [login, { data, loading, error }] = useLoginMutation()
   const [loginData, setLoginData] = useState<LoginInput>({
     password: '',
@@ -58,13 +58,11 @@ export const Login: React.FC<LoginProps> = () => {
         },
       })
 
+      localStorage.setItem('sessionId', data!.login.id as string)
+
       history.push('/')
     } catch {
       // console.log(error?.message)
-    }
-
-    if (!error && data) {
-      localStorage.setItem('sessionId', data.login.id as string)
     }
   }
 
@@ -126,6 +124,10 @@ export const Login: React.FC<LoginProps> = () => {
               </Button>
             </Box>
           </form>
+
+          <Box>
+            <Link to="/register">Register</Link>
+          </Box>
         </Paper>
       </Grid>
     </Box>
