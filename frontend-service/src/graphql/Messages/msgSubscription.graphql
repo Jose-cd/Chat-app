@@ -1,0 +1,8 @@
+subscription msgSubscription {
+  newMessages {
+    id
+    username
+    message
+    createdAt
+  }
+}

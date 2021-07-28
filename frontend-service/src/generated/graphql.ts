@@ -108,6 +108,17 @@ export type GetMessagesQuery = (
   )> }
 );
 
+export type MsgSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MsgSubscriptionSubscription = (
+  { __typename?: 'Subscription' }
+  & { newMessages: (
+    { __typename?: 'Message' }
+    & Pick<Message, 'id' | 'username' | 'message' | 'createdAt'>
+  ) }
+);
+
 export type PostMsgMutationVariables = Exact<{
   msg: MessageInput;
 }>;
@@ -206,6 +217,38 @@ export function useGetMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetMessagesQueryHookResult = ReturnType<typeof useGetMessagesQuery>;
 export type GetMessagesLazyQueryHookResult = ReturnType<typeof useGetMessagesLazyQuery>;
 export type GetMessagesQueryResult = Apollo.QueryResult<GetMessagesQuery, GetMessagesQueryVariables>;
+export const MsgSubscriptionDocument = gql`
+    subscription msgSubscription {
+  newMessages {
+    id
+    username
+    message
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useMsgSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useMsgSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMsgSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMsgSubscriptionSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMsgSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MsgSubscriptionSubscription, MsgSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MsgSubscriptionSubscription, MsgSubscriptionSubscriptionVariables>(MsgSubscriptionDocument, options);
+      }
+export type MsgSubscriptionSubscriptionHookResult = ReturnType<typeof useMsgSubscriptionSubscription>;
+export type MsgSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MsgSubscriptionSubscription>;
 export const PostMsgDocument = gql`
     mutation postMsg($msg: MessageInput!) {
   postMessage(MessageInput: $msg) {

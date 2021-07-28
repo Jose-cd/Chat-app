@@ -51,7 +51,7 @@ services:
       - MYSQL_DATABASE=db
     image: mysql:5.7.20
     ports:
-      - "7200:3600"
+      - "7200:3306"
 
   phpmyadmin:
     mem_limit: 120m
@@ -82,4 +82,4 @@ services:
       - MYSQL_DATABASE=db
     image: mysql:5.7.20
     ports:
-      - "7201:3600"
+      - "7201:3306"

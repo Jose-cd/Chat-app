@@ -6,28 +6,9 @@ interface AddMsgProps {}
 
 export const AddMsg: React.FC<AddMsgProps> = () => {
   const [mutate] = usePostMsgMutation({
-    update: (cache, { data: msg }) => {
-      cache.modify({
-        fields: {
-          getMessages(existingMsgs) {
-            const newMsgList = cache.writeFragment({
-              data: msg?.postMessage,
-              fragment: gql`
-                fragment NewMsg on Message {
-                  id
-                  username
-                  message
-                  createdAt
-                }
-              `,
-            })
-
-            return [...existingMsgs, newMsgList]
-          },
-        },
-      })
-    },
+    awaitRefetchQueries: true,
   })
+
   return (
     <button
       onClick={() =>
