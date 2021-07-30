@@ -1,19 +1,24 @@
+import { gql, useApolloClient } from '@apollo/client'
 import {
   Box,
   Button,
   createStyles,
-  Icon,
   makeStyles,
   TextField,
   Theme,
 } from '@material-ui/core'
-import { AddMsg } from '../components/AddMsg'
-import MsgList from '../components/MsgList'
-import { WithAuth, withAuth } from '../shared/hocs/withAuth'
 import SendIcon from '@material-ui/icons/Send'
-import { usePostMsgMutation } from '../generated/graphql'
-import { gql } from '@apollo/client'
+import { useRef } from 'react'
 import { useState } from 'react'
+import MsgList from '../components/MsgList'
+import {
+  GetMessagesDocument,
+  useGetMessagesQuery,
+  usePostMsgMutation,
+} from '../generated/graphql'
+import { WithAuth, withAuth } from '../shared/hocs/withAuth'
+import useScrollToBottom from '../shared/hooks/useScrollToBottom'
+import isDuplicateDocument from '../shared/utils/isDuplicateDocument'
 interface HomeProps {}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,9 +28,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 const Home = ({ user }: WithAuth<HomeProps>) => {
+  const client = useApolloClient()
   const classes = useStyles()
+  const msgBoxRef = useRef<HTMLDivElement>(null)
+  const [input, setInput] = useState('')
   const [mutate] = usePostMsgMutation({
     update: (cache, { data: msg }) => {
+      const data = client.readQuery({ query: GetMessagesDocument })
+      if (isDuplicateDocument(msg!.postMessage, data.getMessages)) return
       cache.modify({
         fields: {
           getMessages(existingMsgs) {
@@ -47,8 +57,6 @@ const Home = ({ user }: WithAuth<HomeProps>) => {
       })
     },
   })
-  const [input, setInput] = useState('')
-
   const sendMsg = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     mutate({
@@ -61,6 +69,9 @@ const Home = ({ user }: WithAuth<HomeProps>) => {
     })
   }
 
+  const { data: unsortedMsgs } = useGetMessagesQuery()
+  useScrollToBottom(msgBoxRef, unsortedMsgs) // hook to always focus to bottom
+
   return (
     <Box
       height="100vh"
@@ -68,13 +79,15 @@ const Home = ({ user }: WithAuth<HomeProps>) => {
       justifyContent="center"
       alignItems="center"
     >
+      <div></div>
       <Box width="70vh" height="70vh">
         <Box textAlign="center">
           <h2>Chat</h2>
         </Box>
 
         <Box minHeight="300px" maxHeight="300px" overflow="auto">
-          <MsgList />
+          <MsgList unsortedMsgs={unsortedMsgs} />
+          <div ref={msgBoxRef} />
         </Box>
 
         <Box>

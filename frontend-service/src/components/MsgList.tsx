@@ -1,50 +1,20 @@
-import { gql, useApolloClient, useQuery, useSubscription } from '@apollo/client'
-import React, { useEffect } from 'react'
-import { useMemo } from 'react'
+import { useApolloClient } from '@apollo/client'
+import React from 'react'
 import {
   GetMessagesDocument,
+  GetMessagesQuery,
   Message,
-  MsgSubscriptionDocument,
-  useGetMessagesQuery,
   useMsgSubscriptionSubscription,
 } from '../generated/graphql'
+import isDuplicateDocument from '../shared/utils/isDuplicateDocument'
+interface MsgListProps {
+  unsortedMsgs: GetMessagesQuery | undefined
+}
 
-interface MsgListProps {}
-
-// export const MsgList: React.FC<MsgListProps> = () => {
-//   const { data } = useGetMessagesQuery()
-//   const { data: subscriptionData } = useMsgSubscriptionSubscription()
-
-//   console.log(subscriptionData)
-//   return (
-//     <ul>
-//       {data?.getMessages.map(({ username, message, id }) => (
-//         <li key={id}>
-//           <h3>{username}</h3>
-//           <p>{message}</p>
-//         </li>
-//       ))}
-//     </ul>
-//   )
-// }
-
-function MsgList(props: MsgListProps) {
-  // super simplified dupe doc checker
-  function isDuplicateDocument(
-    newDocument: Message,
-    existingDocuments: Message[]
-  ) {
-    return (
-      newDocument.id !== null &&
-      existingDocuments.some((doc) => newDocument.id === doc.id)
-    )
-  }
+function MsgList({ unsortedMsgs }: MsgListProps) {
   const client = useApolloClient()
-  const { data } = useGetMessagesQuery({
-    fetchPolicy: 'network-only',
-  })
-  // console.log('data', data)
-  const { data: subData } = useMsgSubscriptionSubscription({
+
+  useMsgSubscriptionSubscription({
     onSubscriptionData: ({ subscriptionData }) => {
       // get all current Msgs
       const data = client.readQuery({ query: GetMessagesDocument })
@@ -68,14 +38,21 @@ function MsgList(props: MsgListProps) {
     },
   })
 
-  const sortedData = useMemo(
-    () => data?.getMessages.sort((a, b) => b.createdAt! - a.createdAt!),
-    [data]
-  )
+  let sortedMsgs: Message[] = unsortedMsgs?.getMessages.length
+    ? [...unsortedMsgs?.getMessages]
+    : []
+
+  if (sortedMsgs.length >= 2) {
+    console.log()
+    sortedMsgs.sort(
+      (a, b) =>
+        new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf()
+    )
+  }
 
   return (
     <ul>
-      {data?.getMessages.map(({ username, message, id }) => (
+      {sortedMsgs?.map(({ username, message, id }) => (
         <li key={id}>
           <h3>{username}</h3>
           <p>{message}</p>
