@@ -12,6 +12,7 @@ import {
 import { ResolverContext } from "#root/graphql/types";
 import { UserSession } from "../entitites/UserSession";
 import UsersService from "#root/adapters/UsersService";
+import { User } from "../entitites/User";
 
 @InputType()
 class LoginInput {
@@ -79,6 +80,13 @@ export class UserSessionsResolver {
   async logout(@Arg("id") id: string) {
     const response = await UsersService.logout(id);
     console.log(response);
+
+    return response;
+  }
+
+  @Mutation((retuns) => User, { description: "Register" })
+  async register(@Arg("RegisterData") { username, password }: LoginInput) {
+    const response = await UsersService.register(username, password);
 
     return response;
   }

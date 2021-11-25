@@ -1,0 +1,16 @@
+FROM node:12-alpine
+
+WORKDIR /opt/usr/app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /opt/usr/app/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY package.json ./
+RUN yarn install 
+RUN yarn add react-scripts
+
+# add app
+COPY . ./
+
+CMD ["yarn", "start"]

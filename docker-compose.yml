@@ -1,10 +1,26 @@
 version: "3"
 
 services:
-  api-gateway:
+  frontend-service:
+    mem_limit: 1500mb
     build:
-      context: "."
-      dockerfile: "./api-gateway/Dockerfile"
+      context: "./frontend-service"
+      dockerfile: "Dockerfile.dev"
+    environment:
+      - REACT_APP_GRAPHQL_ENDPOINT=http://localhost:7000/graphql
+    depends_on:
+      - api-gateway
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-service:/opt/usr/app
+      - /opt/usr/app/node_modules
+
+  api-gateway:
+    mem_limit: 500m
+    build:
+      context: "./api-gateway"
+      dockerfile: "Dockerfile"
     depends_on:
       - chat-service
       - users-service
@@ -12,28 +28,33 @@ services:
       - "7000:7000"
     volumes:
       - ./api-gateway:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   chat-service:
+    mem_limit: 500m
     build:
-      context: "."
-      dockerfile: "./chat-service/Dockerfile"
+      context: "./chat-service"
+      dockerfile: "Dockerfile"
     depends_on:
       - chat-service-db
     ports:
       - "7100:7100"
     volumes:
       - ./chat-service:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   chat-service-db:
+    mem_limit: 500m
     container_name: chat-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=db
     image: mysql:5.7.20
     ports:
-      - "7200:3600"
+      - "7200:3306"
 
   phpmyadmin:
+    mem_limit: 120m
     image: phpmyadmin/phpmyadmin
     ports:
       - "7300:80"
@@ -41,21 +62,24 @@ services:
       - ./phpmyadmin/config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
 
   users-service:
+    mem_limit: 500m
     build:
-      context: "."
-      dockerfile: "./users-service/Dockerfile"
+      context: "./users-service/"
+      dockerfile: "Dockerfile"
     depends_on:
       - users-service-db
     ports:
       - "7101:7101"
     volumes:
       - ./users-service:/opt/usr/app
+      - /opt/usr/app/node_modules
 
   users-service-db:
+    mem_limit: 500m
     container_name: users-service-db
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=db
     image: mysql:5.7.20
     ports:
-      - "7201:3600"
+      - "7201:3306"

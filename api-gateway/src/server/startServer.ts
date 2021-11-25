@@ -21,7 +21,6 @@ const startserver = async () => {
   const httpServer = http.createServer(app);
 
   //* apply the http server to apollo for websocket connection
-  apolloServer.applyMiddleware({ app });
   apolloServer.installSubscriptionHandlers(httpServer);
 
   app.use(cookieParser());

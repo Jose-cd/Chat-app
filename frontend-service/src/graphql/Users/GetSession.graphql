@@ -1,0 +1,12 @@
+query getSession($id: String!) {
+  getSession(id: $id) {
+    id
+    userId
+    expiresAt
+    createdAt
+    user {
+      id
+      username
+    }
+  }
+}
